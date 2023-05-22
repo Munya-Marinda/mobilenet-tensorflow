@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.css";
@@ -11,7 +11,7 @@ import * as mobilenet from "@tensorflow-models/mobilenet";
 
 function App() {
   const [predictions, setPredictions] = useState([]);
-
+  const imageRef = useRef(null);
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     const image = document.createElement("img");
@@ -19,6 +19,7 @@ function App() {
 
     reader.onload = async (e) => {
       image.src = e.target.result;
+      imageRef.current.src = e.target.result;
       await classifyImage(image);
     };
 
@@ -39,10 +40,26 @@ function App() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          margin: "20px 20px",
+        }}
+      >
+        <img
+          ref={imageRef}
+          src="/cat.jpg"
+          style={{ maxWidth: "100%", marginTop: "20px" }}
+          alt="Uploaded"
+        />
+      </Row>
+      <Row
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "50px 20px",
         }}
       >
         <Col style={{ border: "1px solid gray", maxWidth: "500px" }}>
-          <Form style={{ padding: "50px 20px" }}>
+          <Form style={{ padding: "20px 20px 50px 20px" }}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Select an Image</Form.Label>
               <Form.Control
